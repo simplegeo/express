@@ -84,7 +84,8 @@ Express supports the following settings out of the box:
   * _views_ Root views directory defaulting to **CWD/views**
   * _view engine_ Default view engine name for views rendered without extensions
   * _view options_ An object specifying global view options
-  * _partials_ Root view partials directory defaulting to _views_/partials. 
+  * _partials_ Root view partials directory defaulting to _views_/partials.
+  * _stream threshold_ Bytesize indicating when a file should be streamed for _res.sendfile()_ using _fs.ReadStream()_ and _sys.pump()_.
 
 ### Routing
 
@@ -172,7 +173,7 @@ and middleware continue to be invoked.
 
 ### Middleware
 
-The Express _Plugin_ is no more! middleware via [Connect](http://github.com/extjs/Connect) can be
+The Express _Plugin_ is no more! middleware via [Connect](http://github.com/senchalabs/connect) can be
 passed to _express.createServer()_ as you would with a regular Connect server. For example:
 
 	var express = require('express');
@@ -406,6 +407,10 @@ Queue flash _msg_ of the given _type_.
     req.flash();
     // => { error: ['email delivery failed'], info: [] }
 
+Flash notification message may also utilize formatters, by default only the %s string formatter is available:
+
+    req.flash('info', 'email delivery to _%s_ from _%s_ failed.', toUser, fromUser);
+
 ### req.isXMLHttpRequest
 
 Also aliased as _req.xhr_, this getter checks the _X-Requested-With_ header
@@ -447,10 +452,17 @@ Used by `res.download()` to transfer an arbitrary file.
 
     res.sendfile('path/to/my.file');
 
-This is _not_ a substitution for Connect's _staticProvider_ middleware, it does not
-support HTTP caching, and does not perform any security checks. This method is utilized
-by _res.download()_ to transfer static files, and allows you do to so from outside of
-the public directory, so suitable security checks should be applied.
+This method accepts a callback which when given will be called on an exception, as well as when the transfer has completed. When a callback is not given, and the file has __not__ been streamed, _next(err)_ will be called on an exception.
+
+    res.sendfile(path, function(err, path){
+      if (err) {
+        // handle the error
+      } else {
+        console.log('transferred %s', path);
+      }
+    });
+
+When the filesize exceeds the _stream threshold_ (defaulting to 32k), the file will be streamed using _fs.ReadStream_ and _sys.pump()_.
 
 ### res.download(file[, filename])
 
@@ -470,6 +482,7 @@ The `res.send()` method is a high level response utility allowing you to pass
 objects to respond with json, strings for html, arbitrary _Buffer_s or numbers for status
 code based responses. The following are all valid uses:
 
+     res.send(); // 204
      res.send(new Buffer('wahoo'));
      res.send({ some: 'json' });
      res.send('<p>some html</p>');
@@ -495,6 +508,27 @@ Express supports "redirect mapping", which by default provides _home_, and _back
 The _back_ map checks the _Referrer_ and _Referer_ headers, while _home_ utilizes
 the "home" setting and defaults to "/".
 
+### res.cookie(name, val[, options])
+
+Sets the given cookie _name_ to _val_, with _options_ such as "httpOnly: true", "expires", "secure" etc.
+
+    // "Remember me" for 15 minutes 
+    res.cookie('rememberme', 'yes', { expires: new Date(Date.now() + 900000), httpOnly: true });
+
+To parse incoming _Cookie_ headers, use the _cookieDecoder_ middleware, which provides the _req.cookies_ object:
+
+    app.use(express.cookieDecoder());
+    
+    app.get('/', function(req, res){
+        // use req.cookies.rememberme
+    });
+
+### res.clearCookie(name)
+
+Clear cookie _name_ by setting "expires" far in the past.
+
+    res.clearCookie('rememberme');
+
 ### res.render(view[, options[, fn]])
 
 Render _view_ with the given _options_ and optional callback _fn_.
@@ -507,6 +541,8 @@ automatically, however otherwise a response of _200_ and _text/html_ is given.
   - _context|scope_   Template evaluation context (_this_)
   - _locals_          Object containing local variables
   - _debug_           Output debugging information
+  - _status_          Response status code, defaults to 200
+  - _headers_         Response headers object
 
 ### res.partial(view[, options])
 

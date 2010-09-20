@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Express - node web framework</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 		<style>
 			#tagline {
 			  margin-left: 75px;
@@ -67,6 +68,12 @@
 			    margin: 0;
 			    padding: 2px 0;
 			    list-style: square; }
+          ul li ul {
+            margin: 0;
+            padding-left: 12px;
+          }
+
+      .man-name, #Express { display:none; }
 
 			.sect {
 			  margin-left: 40px; }
@@ -146,6 +153,18 @@
 			        -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
 			        -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.4); }
 		</style>
+		<script>
+		  $(function(){
+		    $('.section').hide();
+		    $('.toggle, a.section-title').toggle(function(){
+		      $(this).siblings('ul').fadeIn(300);
+		      return false;
+		    }, function(){
+		      $(this).siblings('ul').fadeOut(300);
+		      return false;
+		    });
+		  });
+		</script>
 	</head>
 	<body>
 		<a href='http://github.com/visionmedia/express'> 
@@ -164,31 +183,39 @@
 <li><a href="#View-Rendering">View Rendering</a></li>
 <li><a href="#View-Partials">View Partials</a></li>
 <li><a href="#Template-Engines">Template Engines</a></li>
-<li><a href="#req-header-key-defaultValue-">req.header()</a></li>
-<li><a href="#req-accepts-type-">req.accepts()</a></li>
-<li><a href="#req-param-name-">req.param()</a></li>
-<li><a href="#req-flash-type-msg-">req.flash()</a></li>
-<li><a href="#req-isXMLHttpRequest">req.isXMLHttpRequest</a></li>
-<li><a href="#res-header-key-val-">res.header()</a></li>
-<li><a href="#res-contentType-type-">res.contentType()</a></li>
-<li><a href="#res-attachment-filename-">res.attachment()</a></li>
-<li><a href="#res-sendfile-path-">res.sendfile()</a></li>
-<li><a href="#res-download-file-filename-">res.download()</a></li>
-<li><a href="#res-send-body-status-headers-status-status-">res.send()</a></li>
-<li><a href="#res-redirect-url-status-">res.redirect()</a></li>
-<li><a href="#res-render-view-options-fn-">res.render()</a></li>
-<li><a href="#res-partial-view-options-">res.partial()</a></li>
-<li><a href="#app-set-name-val-">app.set()</a></li>
-<li><a href="#app-enable-name-">app.enable()</a></li>
-<li><a href="#app-disable-name-">app.disable()</a></li>
-<li><a href="#app-configure-env-function-function-">app.configure()</a></li>
-<li><a href="#app-redirect-name-val-">app.redirect()</a></li>
-<li><a href="#app-error-function-">app.error()</a></li>
-<li><a href="#app-helpers-obj-">app.helpers()</a></li>
-<li><a href="#app-dynamicHelpers-obj-">app.dynamicHelpers()</a></li>
-<li><a href="#app-mounted-fn-">app.mounted()</a></li>
-<li><a href="#app-register-ext-exports-">app.register()</a></li>
-<li><a href="#app-listen-port-host-">app.listen()</a></li>
+<li><a href="#" class="toggle">+</a> <a class="section-title" href="#">Request</a><ul class="section" id="section-Request">
+<li><a href="#req-header-key-defaultValue-">header()</a></li>
+<li><a href="#req-accepts-type-">accepts()</a></li>
+<li><a href="#req-param-name-">param()</a></li>
+<li><a href="#req-flash-type-msg-">flash()</a></li>
+<li><a href="#req-isXMLHttpRequest">isXMLHttpRequest</a></li>
+</ul></li>
+<li><a href="#" class="toggle">+</a> <a class="section-title" href="#">Response</a><ul class="section" id="section-Response">
+<li><a href="#res-header-key-val-">header()</a></li>
+<li><a href="#res-contentType-type-">contentType()</a></li>
+<li><a href="#res-attachment-filename-">attachment()</a></li>
+<li><a href="#res-sendfile-path-">sendfile()</a></li>
+<li><a href="#res-download-file-filename-">download()</a></li>
+<li><a href="#res-send-body-status-headers-status-status-">send()</a></li>
+<li><a href="#res-redirect-url-status-">redirect()</a></li>
+<li><a href="#res-cookie-name-val-options-">cookie()</a></li>
+<li><a href="#res-clearCookie-name-">clearCookie()</a></li>
+<li><a href="#res-render-view-options-fn-">render()</a></li>
+<li><a href="#res-partial-view-options-">partial()</a></li>
+</ul></li>
+<li><a href="#" class="toggle">+</a> <a class="section-title" href="#">Server</a><ul class="section" id="section-Server">
+<li><a href="#app-set-name-val-">set()</a></li>
+<li><a href="#app-enable-name-">enable()</a></li>
+<li><a href="#app-disable-name-">disable()</a></li>
+<li><a href="#app-configure-env-function-function-">configure()</a></li>
+<li><a href="#app-redirect-name-val-">redirect()</a></li>
+<li><a href="#app-error-function-">error()</a></li>
+<li><a href="#app-helpers-obj-">helpers()</a></li>
+<li><a href="#app-dynamicHelpers-obj-">dynamicHelpers()</a></li>
+<li><a href="#app-mounted-fn-">mounted()</a></li>
+<li><a href="#app-register-ext-exports-">register()</a></li>
+<li><a href="#app-listen-port-host-">listen()</a></li>
+</ul></li>
 </ul>
 				<a href='http://github.com/visionmedia/express' id='logo'>Express</a> 
 				<p id="tagline">
@@ -202,6 +229,10 @@
 					<li><a href="migrate.html">1.x Migration</a></li>
 				</ul>
 <div class='mp'>
+<h2 id="Express">Express</h2>
+<p class="man-name">
+  <code>guide</code>
+</p>
 <h3 id="Installation">Installation</h3>
 
 <p>curl:</p>
@@ -296,6 +327,7 @@ or more specifically <em>EXPRESS_ENV</em>, for example:</p>
 <li><em>view engine</em> Default view engine name for views rendered without extensions</li>
 <li><em>view options</em> An object specifying global view options</li>
 <li><em>partials</em> Root view partials directory defaulting to <em>views</em>/partials.</li>
+<li><em>stream threshold</em> Bytesize indicating when a file should be streamed for <em>res.sendfile()</em> using <em>fs.ReadStream()</em> and <em>sys.pump()</em>.</li>
 </ul>
 
 
@@ -391,7 +423,7 @@ app.get('/users', function(req, res){
 
 <h3 id="Middleware">Middleware</h3>
 
-<p>The Express <em>Plugin</em> is no more! middleware via <a href="http://github.com/extjs/Connect">Connect</a> can be
+<p>The Express <em>Plugin</em> is no more! middleware via <a href="http://github.com/senchalabs/connect">Connect</a> can be
 passed to <em>express.createServer()</em> as you would with a regular Connect server. For example:</p>
 
 <pre><code>var express = require('express');
@@ -657,6 +689,11 @@ req.flash();
 // =&gt; { error: ['email delivery failed'], info: [] }
 </code></pre>
 
+<p>Flash notification message may also utilize formatters, by default only the %s string formatter is available:</p>
+
+<pre><code>req.flash('info', 'email delivery to _%s_ from _%s_ failed.', toUser, fromUser);
+</code></pre>
+
 <h3 id="req-isXMLHttpRequest">req.isXMLHttpRequest</h3>
 
 <p>Also aliased as <em>req.xhr</em>, this getter checks the <em>X-Requested-With</em> header
@@ -703,10 +740,18 @@ res.header('Content-Length');
 <pre><code>res.sendfile('path/to/my.file');
 </code></pre>
 
-<p>This is <em>not</em> a substitution for Connect's <em>staticProvider</em> middleware, it does not
-support HTTP caching, and does not perform any security checks. This method is utilized
-by <em>res.download()</em> to transfer static files, and allows you do to so from outside of
-the public directory, so suitable security checks should be applied.</p>
+<p>This method accepts a callback which when given will be called on an exception, as well as when the transfer has completed. When a callback is not given, and the file has <strong>not</strong> been streamed, <em>next(err)</em> will be called on an exception.</p>
+
+<pre><code>res.sendfile(path, function(err, path){
+  if (err) {
+    // handle the error
+  } else {
+    console.log('transferred %s', path);
+  }
+});
+</code></pre>
+
+<p>When the filesize exceeds the <em>stream threshold</em> (defaulting to 32k), the file will be streamed using <em>fs.ReadStream</em> and <em>sys.pump()</em>.</p>
 
 <h3 id="res-download-file-filename-">res.download(file[, filename])</h3>
 
@@ -728,7 +773,8 @@ res.sendfile(file);
 objects to respond with json, strings for html, arbitrary _Buffer_s or numbers for status
 code based responses. The following are all valid uses:</p>
 
-<pre><code> res.send(new Buffer('wahoo'));
+<pre><code> res.send(); // 204
+ res.send(new Buffer('wahoo'));
  res.send({ some: 'json' });
  res.send('&lt;p&gt;some html&lt;/p&gt;');
  res.send('Sorry, cant find that', 404);
@@ -755,6 +801,30 @@ res.redirect('back');
 The <em>back</em> map checks the <em>Referrer</em> and <em>Referer</em> headers, while <em>home</em> utilizes
 the "home" setting and defaults to "/".</p>
 
+<h3 id="res-cookie-name-val-options-">res.cookie(name, val[, options])</h3>
+
+<p>Sets the given cookie <em>name</em> to <em>val</em>, with <em>options</em> such as "httpOnly: true", "expires", "secure" etc.</p>
+
+<pre><code>// "Remember me" for 15 minutes 
+res.cookie('rememberme', 'yes', { expires: new Date(Date.now() + 900000), httpOnly: true });
+</code></pre>
+
+<p>To parse incoming <em>Cookie</em> headers, use the <em>cookieDecoder</em> middleware, which provides the <em>req.cookies</em> object:</p>
+
+<pre><code>app.use(express.cookieDecoder());
+
+app.get('/', function(req, res){
+    // use req.cookies.rememberme
+});
+</code></pre>
+
+<h3 id="res-clearCookie-name-">res.clearCookie(name)</h3>
+
+<p>Clear cookie <em>name</em> by setting "expires" far in the past.</p>
+
+<pre><code>res.clearCookie('rememberme');
+</code></pre>
+
 <h3 id="res-render-view-options-fn-">res.render(view[, options[, fn]])</h3>
 
 <p>Render <em>view</em> with the given <em>options</em> and optional callback <em>fn</em>.
@@ -768,6 +838,8 @@ automatically, however otherwise a response of <em>200</em> and <em>text/html</e
 <li><em>context|scope</em>   Template evaluation context (<em>this</em>)</li>
 <li><em>locals</em>          Object containing local variables</li>
 <li><em>debug</em>           Output debugging information</li>
+<li><em>status</em>          Response status code, defaults to 200</li>
+<li><em>headers</em>         Response headers object</li>
 </ul>
 
 
