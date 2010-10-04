@@ -70,10 +70,9 @@ For internal and arbitrary settings Express provides the _set(key[, val])_, _ena
 		// same as app.set('some feature', false);
 	});
 
-To alter the environment we can set the _CONNECT_ENV_ environment variable,
-or more specifically _EXPRESS_ENV_, for example:
+To alter the environment we can set the _NODE_ENV_ environment variable, for example:
 
-    $ EXPRESS_ENV=production node app.js
+    $ NODE_ENV=production node app.js
 
 ### Settings
 
@@ -215,15 +214,15 @@ The reason that these are not always defaults, is simply because these are not r
 
 ### Middleware
 
-The Express _Plugin_ is no more! middleware via [Connect](http://github.com/senchalabs/connect) can be
+Middleware via [Connect](http://github.com/senchalabs/connect) can be
 passed to _express.createServer()_ as you would with a regular Connect server. For example:
 
-	var express = require('express');
+	  var express = require('express');
 
     var app = express.createServer(
-		express.logger(),
-		express.bodyDecoder()
-	);
+	  	express.logger(),
+	  	express.bodyDecoder()
+	  );
 
 Alternatively we can _use()_ them which is useful when adding middleware within _configure()_ blocks:
 
@@ -347,6 +346,18 @@ Which can then be overridden within the `res.render()` call if need be:
 
     res.render('myview.ejs', { layout: true });
 
+When an alternate layout is required, we may also specify a path. For example if we have _view engine_ set to _jade_ and a file named _./views/mylayout.jade_ we can simply pass:
+
+    res.render('page', { layout: 'mylayout' });
+
+Otherwise we must specify the extension:
+
+    res.render('page', { layout: 'mylayout.jade' });
+
+These paths may also be absolute:
+
+    res.render('page', { layout: __dirname + '/../../mylayout.jade' });
+
 A good example of this is specifying custom _ejs_ opening and closing tags:
 
 	app.set('view options', {
@@ -386,6 +397,19 @@ Below are a few template engines commonly used with Express:
   * [Jade](http://jade-lang.com) haml.js successor
   * [Haml](http://github.com/visionmedia/haml.js) pythonic indented templates
   * [EJS](http://github.com/visionmedia/ejs) Embedded JavaScript
+
+### Session Support
+
+Sessions support can be added by using Connect's _session_ middleware. To do so we also need the _cookieDecoder_ middleware place above it, which will parse and populate cookie data to _req.cookies_.
+
+    app.use(express.cookieDecoder());
+    app.use(express.session());
+
+By default the _session_ middleware uses the memory store bundled with Connect, however many implementations exist. For example [connect-redis](http://github.com/visionmedia/connect-redis) supplies a [Redis](http://code.google.com/p/redis/) session store and can be used as shown below:
+
+    var RedisStore = require('connect-redis');
+    app.use(express.cookieDecoder());
+    app.use(express.session({ store: new RedisStore }));
 
 ### req.header(key[, defaultValue])
 
