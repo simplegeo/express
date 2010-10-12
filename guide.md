@@ -203,8 +203,8 @@ Typically async data retrieval might look similar to below, where we take the _:
 
     app.get('/user/:id', function(req, res, next){
         loadUser(req.params.id, function(err, user){
-          if (err) return next(err);
-          res.send('Viewing user ' + user.name);
+            if (err) return next(err);
+            res.send('Viewing user ' + user.name);
         });
     });
 
@@ -229,8 +229,8 @@ Multiple route middleware can be applied, and will be executed sequentially to a
 
     function andRestrictToSelf(req, res, next) {
         req.authenticatedUser.id == req.user.id
-          ? next()
-          : next(new Error('Unauthorized'));
+            ? next()
+            : next(new Error('Unauthorized'));
     }
     
     app.get('/user/:id/edit', loadUser, andRestrictToSelf, function(req, res){
@@ -242,8 +242,8 @@ Keeping in mind that middleware are simply functions, we can define function tha
     function andRestrictTo(role) {
         return function(req, res, next) {
           req.authenticatedUser.role == role
-            ? next()
-            : next(new Error('Unauthorized'));
+              ? next()
+              : next(new Error('Unauthorized'));
         }
     }
     
@@ -272,11 +272,11 @@ We have seen _app.get()_ a few times, however Express also exposes other familia
 
  A common example for _POST_ usage, is when "submitting" a form. Below we simply set our form method to "post" in our html, and control will be given to the route we have defined below it.
  
-   <form method="post" action="/">
-       <input type="text" name="user[name]" />
-       <input type="text" name="user[email]" />
-       <input type="submit" value="Submit" />
-   </form>
+     <form method="post" action="/">
+         <input type="text" name="user[name]" />
+         <input type="text" name="user[email]" />
+         <input type="submit" value="Submit" />
+     </form>
 
 By default Express does not know what to do with this request body, so we should add the _bodyDecoder_ middleware, which will parse _application/x-www-form-urlencoded_ request bodies and place the variables in _req.body_. We can do this by "using" the middleware as shown below:
 
