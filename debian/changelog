@@ -1,3 +1,12 @@
+nodejs-express (1.0.0rc4-0sg2) UNRELEASED; urgency=low
+
+  [ Wade Simmons ]
+  * delete the support folder before building
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 14 Oct 2010 20:02:14 +0000
+
 nodejs-express (1.0.0rc4-0sg0) unstable; urgency=low
 
   * Debianized
